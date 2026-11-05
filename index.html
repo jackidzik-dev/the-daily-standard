@@ -1,0 +1,328 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Daily Standard</title>
+<style>
+:root {
+  --bg:#101216; --panel:#1b1f25; --panel2:#252a31;
+  --text:#f4f4f2; --muted:#9299a4; --accent:#c7f36b;
+  --line:#343942; --gold:#dfbd58; --green:#43552d;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:Inter,system-ui,-apple-system,sans-serif;
+}
+button,input { font:inherit; }
+button { cursor:pointer; }
+.app { max-width:1050px; margin:auto; padding:35px 22px 60px; }
+header { display:flex; justify-content:space-between; align-items:center; gap:15px; padding-bottom:25px; border-bottom:1px solid var(--line); }
+.brand { display:flex; align-items:center; gap:10px; color:var(--accent); font-size:11px; font-weight:800; letter-spacing:2px; }
+.dot { width:9px; height:9px; border-radius:3px; background:var(--accent); }
+h1 { font-size:clamp(23px,4vw,34px); letter-spacing:-1.2px; margin:7px 0 3px; }
+.subtitle { color:var(--muted); font-size:12px; letter-spacing:1.5px; }
+.date { color:var(--muted); font-size:13px; }
+.intro { margin:30px 0 20px; }
+.intro h2 { font-size:25px; margin:6px 0; }
+.muted { color:var(--muted); font-size:13px; }
+.panel { background:var(--panel); border:1px solid #292e36; border-radius:15px; padding:22px; margin-bottom:20px; }
+.score-top { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.eyebrow { color:var(--muted); font-size:11px; font-weight:700; letter-spacing:1.3px; }
+.status { font-size:10px; font-weight:800; letter-spacing:1px; border-radius:20px; padding:7px 10px; background:var(--panel2); color:var(--muted); }
+.status.success { background:#303e29; color:var(--accent); }
+.status.perfect { background:#55471f; color:#f4d879; }
+.score-row { display:flex; justify-content:space-between; align-items:end; margin:14px 0; }
+.score { font-size:53px; font-weight:750; letter-spacing:-3px; color:var(--accent); }
+.score.gold { color:var(--gold); }
+.bar { height:10px; border-radius:20px; overflow:hidden; background:#343942; }
+.bar-fill { height:100%; width:0; background:var(--accent); transition:width .2s; }
+.bar-fill.gold { background:var(--gold); }
+.bar-labels { display:flex; justify-content:space-between; color:var(--muted); font-size:11px; margin-top:9px; }
+.section-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:28px 0 13px; }
+.section-head h3 { font-size:15px; margin:0; }
+.categories { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; }
+.category { border:1px solid transparent; background:var(--panel); color:var(--text); border-radius:12px; padding:15px; text-align:left; min-width:0; }
+.category.active { border-color:var(--accent); background:#252d22; }
+.cat-icon { font-size:20px; }
+.cat-name { display:block; font-size:13px; font-weight:700; margin:10px 0 5px; }
+.cat-score { font-size:22px; font-weight:750; }
+.cat-weight { color:var(--muted); font-size:10px; }
+.mini-bar { height:4px; background:#343942; border-radius:10px; margin-top:10px; overflow:hidden; }
+.mini-fill { height:100%; background:var(--accent); }
+.filters { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:13px; }
+.filter,.secondary,.primary {
+  border:1px solid var(--line); border-radius:8px; padding:9px 12px;
+  background:transparent; color:var(--text); font-size:12px;
+}
+.filter.active,.primary { background:var(--accent); color:#17200e; border-color:var(--accent); font-weight:750; }
+.goal-list { display:grid; gap:8px; }
+.goal { background:var(--panel); border:1px solid #292e36; padding:13px 15px; border-radius:10px; display:flex; align-items:center; gap:12px; }
+.goal input { accent-color:var(--accent); width:18px; height:18px; cursor:pointer; flex-shrink:0; }
+.goal-name { flex:1; font-size:13px; line-height:1.4; }
+.goal.done .goal-name { color:#858b95; text-decoration:line-through; }
+.weight { color:var(--muted); font-size:12px; font-weight:700; white-space:nowrap; }
+.goal.done .weight { color:var(--accent); }
+.calendar { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+.calendar div { min-width:0; }
+.weekday { text-align:center; color:var(--muted); font-size:11px; padding:5px 0; }
+.day { display:flex; justify-content:center; align-items:center; height:39px; border-radius:8px; background:var(--panel2); color:var(--muted); font-size:12px; }
+.day.empty { background:transparent; }
+.day.success { background:var(--green); color:#d4f59a; }
+.day.perfect { background:var(--gold); color:#211b0c; font-weight:900; }
+.day.today { outline:2px solid var(--accent); outline-offset:1px; }
+.legend { display:flex; flex-wrap:wrap; gap:16px; margin-top:14px; }
+.legend span { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--muted); }
+.swatch { width:9px; height:9px; border-radius:3px; display:inline-block; }
+.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.stat { background:var(--panel); padding:16px; border-radius:11px; }
+.stat strong { display:block; font-size:25px; margin:5px 0; }
+.stat small { color:var(--muted); font-size:11px; }
+.note { color:var(--muted); font-size:11px; line-height:1.6; }
+footer { text-align:center; color:#6f7782; font-size:10px; letter-spacing:1.5px; padding-top:20px; }
+@media(max-width:700px) {
+ .categories { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .categories .category:last-child { grid-column:span 2; }
+ .app { padding:22px 14px 40px; }
+ .panel { padding:17px; }
+ .stats { grid-template-columns:1fr 1fr; }
+}
+@media(max-width:390px) {
+ .score { font-size:43px; }
+ .date { font-size:11px; }
+}
+</style>
+</head>
+<body>
+<main class="app">
+<header>
+  <div>
+    <div class="brand"><span class="dot"></span> PERSONAL DEVELOPMENT</div>
+    <h1>THE DAILY STANDARD</h1>
+    <div class="subtitle">BUILD YOURSELF. EVERY DAY.</div>
+  </div>
+  <div class="date" id="todayDate"></div>
+</header>
+
+<section class="intro">
+  <div class="eyebrow">YOUR DAILY DASHBOARD</div>
+  <h2>Make today count.</h2>
+  <div class="muted">Small actions. Consistent progress.</div>
+</section>
+
+<section class="panel">
+  <div class="score-top">
+    <div class="eyebrow">TODAY'S COMPLETION</div>
+    <div class="status" id="status">IN PROGRESS</div>
+  </div>
+  <div class="score-row">
+    <div class="score" id="score">0%</div>
+    <div class="muted" id="count">0 / 25 goals completed</div>
+  </div>
+  <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+  <div class="bar-labels"><span>0%</span><span>80% SUCCESS TARGET</span><span>100%</span></div>
+  <p class="muted" id="scoreMessage">Every completed goal moves you forward.</p>
+</section>
+
+<div class="section-head"><h3>YOUR CATEGORIES</h3><span class="eyebrow">WEIGHTED BY IMPORTANCE</span></div>
+<section class="categories" id="categories"></section>
+
+<div class="section-head">
+  <div><h3>DAILY GOALS</h3><div class="muted" id="filterLabel">All five categories</div></div>
+  <span class="eyebrow">CHECK OFF AS YOU GO</span>
+</div>
+<nav class="filters" id="filters"></nav>
+<section class="goal-list" id="goalList"></section>
+
+<div class="section-head"><h3>PROGRESS HISTORY</h3><span class="eyebrow" id="monthLabel"></span></div>
+<section class="panel">
+  <div class="calendar" id="calendar"></div>
+  <div class="legend">
+    <span><i class="swatch" style="background:#343942"></i>Below 80%</span>
+    <span><i class="swatch" style="background:#43552d"></i>Successful</span>
+    <span><i class="swatch" style="background:#dfbd58"></i>Perfect</span>
+  </div>
+</section>
+
+<div class="section-head"><h3>YOUR ANALYTICS</h3></div>
+<section class="stats">
+  <div class="stat"><small>Current streak</small><strong id="streak">0</strong><small>Successful days</small></div>
+  <div class="stat"><small>Perfect days</small><strong id="perfectDays">0</strong><small>100% completion</small></div>
+  <div class="stat"><small>Successful days</small><strong id="successfulDays">0</strong><small>80% or higher</small></div>
+</section>
+<p class="note">Your progress is saved in this browser on this device. This prototype does not yet have user accounts or cloud backup. Your sleep goal refers to getting sufficient sleep, not sacrificing sleep to finish other goals.</p>
+<footer>THE DAILY STANDARD · VERSION 2.1</footer>
+</main>
+
+<script>
+const categories = [
+ {name:"Health",icon:"♥",weight:24,color:"#79b995"},
+ {name:"Creation",icon:"✦",weight:24,color:"#80a9dc"},
+ {name:"Discipline",icon:"◎",weight:20,color:"#d2b16c"},
+ {name:"Connected",icon:"♡",weight:18,color:"#b49ad8"},
+ {name:"Hygiene",icon:"✧",weight:14,color:"#69b8b4"}
+];
+
+const goals = [
+ {id:1,cat:"Health",name:"Complete planned exercise or recovery movement",weight:8},
+ {id:2,cat:"Health",name:"Meet personalized nutrition goal",weight:5},
+ {id:3,cat:"Health",name:"Drink three 24 oz water bottles",weight:4},
+ {id:4,cat:"Health",name:"Get 8–10 hours of sleep",weight:7},
+ {id:5,cat:"Creation",name:"Work on business for one hour",weight:5},
+ {id:6,cat:"Creation",name:"Learn for 30 minutes",weight:4},
+ {id:7,cat:"Creation",name:"Complete schoolwork before entertainment",weight:7},
+ {id:8,cat:"Creation",name:"Play guitar for 20 minutes",weight:3},
+ {id:9,cat:"Creation",name:"Create something every day",weight:5},
+ {id:10,cat:"Discipline",name:"No social media before productive work",weight:5},
+ {id:11,cat:"Discipline",name:"Read for 25 minutes",weight:4},
+ {id:12,cat:"Discipline",name:"Plan tomorrow before bed",weight:3},
+ {id:13,cat:"Discipline",name:"Meditate or reflect for 10 minutes",weight:3},
+ {id:14,cat:"Discipline",name:"Keep promises made to myself",weight:5},
+ {id:15,cat:"Connected",name:"Reach out to a friend or family member",weight:3},
+ {id:16,cat:"Connected",name:"Express gratitude to someone",weight:3},
+ {id:17,cat:"Connected",name:"Send a meaningful message to someone",weight:2},
+ {id:18,cat:"Connected",name:"Do something nice for family",weight:4},
+ {id:19,cat:"Connected",name:"Be fully present during quality time",weight:6},
+ {id:20,cat:"Hygiene",name:"Brush teeth – morning (2 minutes)",weight:2.5},
+ {id:21,cat:"Hygiene",name:"Brush teeth – evening (2 minutes)",weight:2.5},
+ {id:22,cat:"Hygiene",name:"Floss once daily",weight:4},
+ {id:23,cat:"Hygiene",name:"Wash face – morning",weight:1.5},
+ {id:24,cat:"Hygiene",name:"Wash face – evening",weight:1.5},
+ {id:25,cat:"Hygiene",name:"Shower after sweaty activities and maintain grooming",weight:2}
+];
+
+const STORAGE_KEY = "daily-standard-v1";
+const today = localDateKey(new Date());
+let activeFilter = "All";
+let history = loadHistory();
+
+function localDateKey(date) {
+ return date.getFullYear()+"-"+String(date.getMonth()+1).padStart(2,"0")+"-"+String(date.getDate()).padStart(2,"0");
+}
+function loadHistory() {
+ try {
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+  return saved && typeof saved === "object" ? saved : {};
+ } catch { return {}; }
+}
+function saveHistory() {
+ try { localStorage.setItem(STORAGE_KEY,JSON.stringify(history)); }
+ catch { alert("Your browser could not save this update. Check your browser storage settings."); }
+}
+function completedFor(date) {
+ return history[date]?.completed || [];
+}
+function scoreFor(date) {
+ const done = new Set(completedFor(date));
+ return goals.reduce((sum,g)=>sum+(done.has(g.id)?g.weight:0),0);
+}
+function currentScore() { return scoreFor(today); }
+function isSuccessful(date) { return scoreFor(date)>=80; }
+
+function render() {
+ const done = new Set(completedFor(today));
+ const score = currentScore();
+ const count = done.size;
+ document.getElementById("todayDate").textContent =
+  new Date().toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
+ document.getElementById("score").textContent = score+"%";
+ document.getElementById("score").className = "score"+(score===100?" gold":"");
+ document.getElementById("count").textContent = count+" / "+goals.length+" goals completed";
+ document.getElementById("barFill").style.width = score+"%";
+ document.getElementById("barFill").className = "bar-fill"+(score===100?" gold":"");
+ const status = document.getElementById("status");
+ status.textContent = score===100?"PERFECT DAY":score>=80?"SUCCESSFUL DAY":"IN PROGRESS";
+ status.className = "status"+(score===100?" perfect":score>=80?" success":"");
+ document.getElementById("scoreMessage").textContent =
+  score===100?"Every goal completed. A perfect day.":score>=80?"You've reached your daily success target.":(80-score).toFixed(1)+" points to reach your 80% success target.";
+
+ document.getElementById("categories").innerHTML = categories.map(c=>{
+  const value = goals.filter(g=>g.cat===c.name&&done.has(g.id)).reduce((s,g)=>s+g.weight,0);
+  return `<button class="category ${activeFilter===c.name?"active":""}" data-category="${c.name}">
+   <span class="cat-icon" style="color:${c.color}">${c.icon}</span>
+   <span class="cat-name">${c.name}</span>
+   <span class="cat-score" style="color:${c.color}">${value}%</span>
+   <span class="cat-weight">of ${c.weight}% available</span>
+   <span class="mini-bar"><span class="mini-fill" style="display:block;width:${value/c.weight*100}%;background:${c.color}"></span></span>
+  </button>`;
+ }).join("");
+
+ document.getElementById("filters").innerHTML =
+  ["All",...categories.map(c=>c.name)].map(c=>
+   `<button class="filter ${activeFilter===c?"active":""}" data-filter="${c}">${c}</button>`
+  ).join("");
+ document.getElementById("filterLabel").textContent = activeFilter==="All"?"All five categories":activeFilter;
+ const shown = goals.filter(g=>activeFilter==="All"||g.cat===activeFilter);
+ document.getElementById("goalList").innerHTML = shown.map(g=>
+  `<label class="goal ${done.has(g.id)?"done":""}">
+   <input type="checkbox" data-goal="${g.id}" ${done.has(g.id)?"checked":""}>
+   <span class="goal-name">${g.name}</span>
+   <span class="weight">+${g.weight}%</span>
+  </label>`
+ ).join("");
+ renderCalendar();
+ renderAnalytics();
+}
+
+function renderCalendar() {
+ const now = new Date();
+ const year = now.getFullYear(), month = now.getMonth();
+ const firstDay = new Date(year,month,1).getDay();
+ const offset = (firstDay+6)%7;
+ const days = new Date(year,month+1,0).getDate();
+ document.getElementById("monthLabel").textContent =
+  now.toLocaleDateString(undefined,{month:"long",year:"numeric"});
+ const cells = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(d=>`<div class="weekday">${d}</div>`);
+ for(let i=0;i<offset;i++) cells.push('<div class="day empty"></div>');
+ for(let d=1;d<=days;d++) {
+  const key = localDateKey(new Date(year,month,d));
+  const score = scoreFor(key);
+  const cls = score===100?"perfect":score>=80?"success":"";
+  const trophy = score===100?"★":d;
+  cells.push(`<div class="day ${cls} ${key===today?"today":""}" title="${score}%">${trophy}</div>`);
+ }
+ document.getElementById("calendar").innerHTML = cells.join("");
+}
+function renderAnalytics() {
+ const dates = Object.keys(history).filter(d=>d<=today).sort();
+ let streak=0;
+ const cursor = new Date();
+ while(true) {
+  const key=localDateKey(cursor);
+  if(!history[key] || scoreFor(key)<80) break;
+  streak++;
+  cursor.setDate(cursor.getDate()-1);
+ }
+ document.getElementById("streak").textContent = streak;
+ document.getElementById("perfectDays").textContent = dates.filter(d=>scoreFor(d)===100).length;
+ document.getElementById("successfulDays").textContent = dates.filter(d=>scoreFor(d)>=80).length;
+}
+
+document.addEventListener("change",event=>{
+ if(event.target.matches("[data-goal]")) {
+  const id=Number(event.target.dataset.goal);
+  const done=new Set(completedFor(today));
+  if(event.target.checked) done.add(id); else done.delete(id);
+  history[today]={completed:[...done]};
+  saveHistory();
+  render();
+ }
+});
+document.addEventListener("click",event=>{
+ const category=event.target.closest("[data-category]");
+ const filter=event.target.closest("[data-filter]");
+ if(category) {
+  activeFilter=activeFilter===category.dataset.category?"All":category.dataset.category;
+  render();
+ }
+ if(filter) { activeFilter=filter.dataset.filter; render(); }
+});
+
+// Create today's record without overwriting earlier dates.
+if(!history[today]) { history[today]={completed:[]}; saveHistory(); }
+render();
+</script>
+</body>
+</html>

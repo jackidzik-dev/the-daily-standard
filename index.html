@@ -18,7 +18,65 @@ body {
 button,input { font:inherit; }
 button { cursor:pointer; }
 .app { max-width:1050px; margin:auto; padding:35px 22px 60px; }
-header { display:flex; justify-content:space-between; align-items:center; gap:15px; padding-bottom:25px; border-bottom:1px solid var(--line); }
+header { display:flex; justify-content:header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo-mark {
+  width: 100px;
+  height: 85px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 2px solid var(--accent);
+  padding-right: 20px;
+}
+
+.logo-mark svg {
+  width: 75px;
+  height: 65px;
+}
+
+.brand-text .eyebrow {
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 3px;
+  margin-bottom: 5px;
+}
+
+header h1 {
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 850;
+  letter-spacing: 1px;
+  line-height: 1.05;
+  margin: 0;
+}
+
+header .subtitle {
+  color: var(--accent);
+  font-size: 11px;
+  letter-spacing: 2px;
+  margin-top: 9px;
+  font-weight: 650;
+}
+
+.date {
+  color: var(--muted);
+  font-size: 13px;
+  white-space: nowrap;
+}-between; align-items:center; gap:15px; padding-bottom:25px; border-bottom:1px solid var(--line); }
 .brand { display:flex; align-items:center; gap:10px; color:var(--accent); font-size:11px; font-weight:800; letter-spacing:2px; }
 .dot { width:9px; height:9px; border-radius:3px; background:var(--accent); }
 h1 { font-size:clamp(23px,4vw,34px); letter-spacing:-1.2px; margin:7px 0 3px; }

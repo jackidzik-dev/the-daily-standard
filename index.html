@@ -63,6 +63,33 @@ header h1 {
   line-height: 1.05;
   margin: 0;
 }
+       header h1 {
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 850;
+  letter-spacing: 1px;
+  line-height: 1.05;
+  margin: 0;
+}
+
+header h1 span {
+  display: block;
+}
+
+header h1 span:first-child {
+  font-size: .42em;
+  letter-spacing: 5px;
+}
+
+header h1 span:nth-child(2) {
+  letter-spacing: 1px;
+}
+
+header h1 span:last-child {
+  font-size: .62em;
+  letter-spacing: 5px;
+}
+
+header .subtitle {
 
 header .subtitle {
   color: var(--accent);

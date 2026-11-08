@@ -145,8 +145,89 @@ header .subtitle {
 .bar-labels { display:flex; justify-content:space-between; color:var(--muted); font-size:11px; margin-top:9px; }
 .section-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:28px 0 13px; }
 .section-head h3 { font-size:15px; margin:0; }
-.categories { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; }
-.category { border:1px solid transparent; background:var(--panel); color:var(--text); border-radius:12px; padding:15px; text-align:left; min-width:0; }
+.categories {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+  align-items:stretch;
+}
+
+.category {
+  border:1px solid var(--line);
+  background:var(--panel);
+  color:var(--text);
+  border-radius:14px;
+  padding:22px;
+  text-align:left;
+  min-width:0;
+  min-height:220px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:10px;
+  transition:border-color .2s, transform .2s;
+}
+
+.category:hover {
+  border-color:var(--accent);
+  transform:translateY(-2px);
+}
+
+.category.active {
+  border-color:var(--accent);
+}
+  
+.category .cat-icon {
+  font-size:24px;
+  margin-bottom:2px;
+}
+
+.category .cat-name {
+  font-size:19px;
+  font-weight:800;
+  letter-spacing:.3px;
+}
+
+.category .definition-pronunciation {
+  color:var(--muted);
+  font-size:11px;
+  font-style:italic;
+  letter-spacing:.5px;
+}
+
+.category .category-definition {
+  color:var(--text);
+  font-size:13px;
+  line-height:1.6;
+  min-height:62px;
+}
+
+.category .cat-score {
+  font-size:12px;
+  font-weight:750;
+  margin-top:auto;
+}
+
+.category .cat-weight {
+  color:var(--muted);
+  font-size:10px;
+}
+
+.category .mini-bar {
+  width:100%;
+  height:5px;
+  background:var(--panel2);
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.category .category-action {
+  color:var(--accent);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1px;
+  margin-top:5px;
+}
 .category.active { border-color:var(--accent); background:#252d22; }
 .cat-icon { font-size:20px; }
 .cat-name { display:block; font-size:13px; font-weight:700; margin:10px 0 5px; }
@@ -391,16 +472,49 @@ function render() {
  document.getElementById("scoreMessage").textContent =
   score===100?"Every goal completed. A perfect day.":score>=80?"You've reached your daily success target.":(80-score).toFixed(1)+" points to reach your 80% success target.";
 
- document.getElementById("categories").innerHTML = categories.map(c=>{
-  const value = goals.filter(g=>g.cat===c.name&&done.has(g.id)).reduce((s,g)=>s+g.weight,0);
+
+const definitions = {
+  Health: {
+    pronunciation: "/helTH/ · noun",
+    definition: "Building the physical and mental foundation to perform, recover, and live well."
+  },
+  Creation: {
+    pronunciation: "/krē-ā-shən/ · noun",
+    definition: "Developing knowledge, skills, and ideas into meaningful work."
+  },
+  Discipline: {
+    pronunciation: "/dis-uh-plin/ · noun",
+    definition: "Following through on commitments, even when motivation is absent."
+  },
+  Connected: {
+    pronunciation: "/kuh-nek-tid/ · adjective",
+    definition: "Building meaningful relationships through presence, kindness, and effort."
+  },
+  Hygiene: {
+    pronunciation: "/hī-jēn/ · noun",
+    definition: "Maintaining personal care and consistent habits that support well-being."
+  }
+};
+
+document.getElementById("categories").innerHTML = categories.map(c=>{
+  const value = goals
+    .filter(g=>g.cat===c.name&&done.has(g.id))
+    .reduce((s,g)=>s+g.weight,0);
+
+  const definition = definitions[c.name];
+
   return `<button class="category ${activeFilter===c.name?"active":""}" data-category="${c.name}">
-   <span class="cat-icon" style="color:${c.color}">${c.icon}</span>
-   <span class="cat-name">${c.name}</span>
-   <span class="cat-score" style="color:${c.color}">${value}%</span>
-   <span class="cat-weight">of ${c.weight}% available</span>
-   <span class="mini-bar"><span class="mini-fill" style="display:block;width:${value/c.weight*100}%;background:${c.color}"></span></span>
+    <span class="cat-icon" style="color:${c.color}">${c.icon}</span>
+    <span class="cat-name">${c.name}</span>
+    <span class="definition-pronunciation">${definition.pronunciation}</span>
+    <span class="category-definition">${definition.definition}</span>
+    <span class="cat-score" style="color:${c.color}">${value}% complete</span>
+    <span class="mini-bar"><span class="mini-fill" style="display:block;width:${value/c.weight*100}%;background:${c.color}"></span></span>
+    <span class="cat-weight">of ${c.weight}% available</span>
+    <span class="category-action">VIEW DAILY GOALS →</span>
   </button>`;
- }).join("");
+}).join("");
+
 
  document.getElementById("filters").innerHTML =
   ["All",...categories.map(c=>c.name)].map(c=>

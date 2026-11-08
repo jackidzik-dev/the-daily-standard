@@ -418,7 +418,7 @@ function saveCustomTopics() {
     JSON.stringify(customGoals)
   );
 }
-const goals = [
+  const goals = [
  {id:1,cat:"Health",name:"Complete planned exercise or recovery movement",weight:8},
  {id:2,cat:"Health",name:"Meet personalized nutrition goal",weight:5},
  {id:3,cat:"Health",name:"Drink three 24 oz water bottles",weight:4},
@@ -445,6 +445,8 @@ const goals = [
  {id:24,cat:"Hygiene",name:"Wash face – evening",weight:1.5},
  {id:25,cat:"Hygiene",name:"Shower after sweaty activities and maintain grooming",weight:2}
 ];
+  const allCategories = [...categories, ...customCategories];
+const allGoals = [...goals, ...customGoals];
 
 const STORAGE_KEY = "ascent-project-v1";
 const today = localDateKey(new Date());
@@ -515,12 +517,15 @@ const definitions = {
   }
 };
 
-document.getElementById("categories").innerHTML = categories.map(c=>{
-  const value = goals
-    .filter(g=>g.cat===c.name&&done.has(g.id))
-    .reduce((s,g)=>s+g.weight,0);
+document.getElementById("categories").innerHTML = allCategories.map(c=>{
+ const value = allGoals
+  .filter(g=>g.cat===c.name&&done.has(g.id))
+  .reduce((s,g)=>s+g.weight,0);
 
-  const definition = definitions[c.name];
+  const definition = definitions[c.name] || {
+  pronunciation: c.pronunciation || "/custom/ · noun",
+  definition: c.definition || "A topic dedicated to personal growth."
+}; 
 
   return `<button class="category ${activeFilter===c.name?"active":""}" data-category="${c.name}">
     <span class="cat-icon" style="color:${c.color}">${c.icon}</span>
@@ -536,11 +541,11 @@ document.getElementById("categories").innerHTML = categories.map(c=>{
 
 
  document.getElementById("filters").innerHTML =
-  ["All",...categories.map(c=>c.name)].map(c=>
+  ["All",...allCategories.map(c=>c.name)].map(c=>
    `<button class="filter ${activeFilter===c?"active":""}" data-filter="${c}">${c}</button>`
   ).join("");
  document.getElementById("filterLabel").textContent = activeFilter==="All"?"All five categories":activeFilter;
- const shown = goals.filter(g=>activeFilter==="All"||g.cat===activeFilter);
+const shown = allGoals.filter(g=>activeFilter==="All"||g.cat===activeFilter);
  document.getElementById("goalList").innerHTML = shown.map(g=>
   `<label class="goal ${done.has(g.id)?"done":""}">
    <input type="checkbox" data-goal="${g.id}" ${done.has(g.id)?"checked":""}>

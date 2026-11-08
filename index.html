@@ -528,12 +528,12 @@ document.getElementById("categories").innerHTML = allCategories.map(c=>{
 }; 
 
   return `<button class="category ${activeFilter===c.name?"active":""}" data-category="${c.name}">
-    <span class="cat-icon" style="color:${c.color}">${c.icon}</span>
+   <span class="cat-icon" style="color:var(--accent)">${c.icon}</span>
     <span class="cat-name">${c.name}</span>
     <span class="definition-pronunciation">${definition.pronunciation}</span>
     <span class="category-definition">${definition.definition}</span>
-    <span class="cat-score" style="color:${c.color}">${value}% complete</span>
-    <span class="mini-bar"><span class="mini-fill" style="display:block;width:${value/c.weight*100}%;background:${c.color}"></span></span>
+    <span class="cat-score">${value}% complete</span>
+    <span class="mini-bar"><span class="mini-fill" style="display:block;width:${value/c.weight*100}%;background:var(--accent)"></span></span>
     <span class="cat-weight">of ${c.weight}% available</span>
     <span class="category-action">VIEW DAILY GOALS →</span>
   </button>`;

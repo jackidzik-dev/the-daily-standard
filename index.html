@@ -398,7 +398,26 @@ const categories = [
  {name:"Connected",icon:"♡",weight:18,color:"#b49ad8"},
  {name:"Hygiene",icon:"✧",weight:14,color:"#69b8b4"}
 ];
+// Custom topics saved by the user 
+let customCategories = JSON.parse(
+  localStorage.getItem("ascent-custom-categories") || "[]"
+);
 
+let customGoals = JSON.parse(
+  localStorage.getItem("ascent-custom-goals") || "[]"
+);
+
+function saveCustomTopics() {
+  localStorage.setItem(
+    "ascent-custom-categories",
+    JSON.stringify(customCategories)
+  );
+
+  localStorage.setItem(
+    "ascent-custom-goals",
+    JSON.stringify(customGoals)
+  );
+}
 const goals = [
  {id:1,cat:"Health",name:"Complete planned exercise or recovery movement",weight:8},
  {id:2,cat:"Health",name:"Meet personalized nutrition goal",weight:5},

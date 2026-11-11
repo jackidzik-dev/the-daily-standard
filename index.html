@@ -438,6 +438,9 @@ function saveCustomTopics() {
     "ascent-custom-goals",
     JSON.stringify(customGoals)
   );
+
+  allCategories = [...categories, ...customCategories];
+  allGoals = [...goals, ...customGoals];
 }
   const goals = [
  {id:1,cat:"Health",name:"Complete planned exercise or recovery movement",weight:8},
@@ -466,8 +469,8 @@ function saveCustomTopics() {
  {id:24,cat:"Hygiene",name:"Wash face – evening",weight:1.5},
  {id:25,cat:"Hygiene",name:"Shower after sweaty activities and maintain grooming",weight:2}
 ];
-  const allCategories = [...categories, ...customCategories];
-const allGoals = [...goals, ...customGoals];
+  let allCategories = [...categories, ...customCategories];
+let allGoals = [...goals, ...customGoals];
 
 const STORAGE_KEY = "ascent-project-v1";
 const today = localDateKey(new Date());

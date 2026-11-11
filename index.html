@@ -176,6 +176,27 @@ header .subtitle {
 .category.active {
   border-color:var(--accent);
 }
+  .add-category {
+  border:1px dashed var(--accent);
+  background:transparent;
+  cursor:pointer;
+  justify-content:center;
+}
+
+.add-category:hover {
+  background:var(--panel);
+  border-style:solid;
+}
+
+.add-category .cat-icon {
+  color:var(--accent);
+  font-size:30px;
+  font-weight:400;
+}
+
+.add-category .category-definition {
+  color:var(--muted);
+}
   
 .category .cat-icon {
   font-size:24px;
@@ -538,6 +559,17 @@ document.getElementById("categories").innerHTML = allCategories.map(c=>{
     <span class="category-action">VIEW DAILY GOALS →</span>
   </button>`;
 }).join("");
+
+  document.getElementById("categories").innerHTML += `
+  <button class="category add-category" type="button">
+    <span class="cat-icon">+</span>
+    <span class="cat-name">Add More Topics</span>
+    <span class="category-definition">
+      Create a new area of focus and build goals around it.
+    </span>
+    <span class="category-action">+ CREATE NEW TOPIC</span>
+  </button>
+`;
 
 
  document.getElementById("filters").innerHTML =
